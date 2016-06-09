@@ -765,11 +765,12 @@ var asChart = function () {
 	this.updateSize = function () { 
 		var rect = this.container.node ().getBoundingClientRect ();
 		//console.log (rect.width - this.margin.left - this.margin.right);
+		this.svg.attr ({"width": rect.width, "height": rect.height})
+		this.svg = this.svg.append ("g")
+			.attr ("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
+
 		this.width = parseInt(rect.width)-parseInt(this.margin.left)-parseInt(this.margin.right);
 		this.height = rect.height - this.margin.top - this.margin.bottom; 
-		this.svg.attr ({"width": this.width + this.margin.left + this.margin.right, "height": this.height + this.margin.top + this.margin.bottom})
-			.attr ("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
-		console.log (this.width + " x " + this.height);
 	}
 	this.quantifierCallback = function (quantifier, callback, innerCallback) {
 		if (quantifier) {
@@ -959,10 +960,13 @@ var asLines = function () {
 			yAxis = d3.svg.axis().scale (d.scale).tickSize (axisWidth).orient ("left");
 		}
 		if (yAxis) {
-			this.svg.append ("g").attr("class", "axis").attr ("transform", "translate("+parseInt(this.width+this.margin.left)+",0)").call (yAxis);
+			this.svg.append ("g").attr("class", "axis")
+				.attr ("transform", "translate("+parseInt(this.width)+",0)")
+				.call (yAxis);
 		}
 		if (xAxis) {
-			this.svg.append ("g").attr ("class", "axis").attr ("transform", "translate("+parseInt(this.margin.left)+",0)").call (xAxis);
+			this.svg.append ("g").attr ("class", "axis")
+				.call (xAxis);
 		}
 
 
@@ -1046,7 +1050,7 @@ var asLines = function () {
 						.on ("click", this.createCallback ("click"))
 						.on ("mouseover", this.createCallback ("mouseover"));
 					attrs.height = cHeight - attrs.y;
-					attrs.height = attrs.height > 0 ? attrs.height : 0;
+					//attrs.height = attrs.height > 0 ? attrs.height : 0;
 					this.setElementAttributes (col, attrs);
 					col.classed ("column", true);
 
